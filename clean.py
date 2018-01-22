@@ -31,6 +31,7 @@ file_clean.write('\\begin{document}\n')
 title=0
 
 for old_line in file_dirty:
+    
     #Deal with the use of characters that need to be escaped in latex
     forbidden=old_line.split('%')
     joiner='\\%'
@@ -63,6 +64,8 @@ for old_line in file_dirty:
             Preference.append(pref[:-1])
             pref_line=str('\\textbf{Preferred format: }'+pref + '\n')
             file_clean.write(pref_line)
+            if re.findall(r"Poster", pref):
+                Poster_Present.append("Yes")
         elif line.startswith('- If you'):
             poster=line[113:]
             Poster_Present.append(poster[:-1])
@@ -91,8 +94,11 @@ file_meta=open('meta_data.tex', "w") #makes metadata file
 
 total_talks=len(References)
 
+print(len(Poster_Present))
+print(len(Preference))
+
 for talk in range(0,total_talks): #make tab-delimited file of metadata
-    line=str(References[talk] + '\t' + Preference[talk] + '\t' + Genders[talk] + '\t' + Status[talk] + '\n')
+    line=str(References[talk] + '\t' + Preference[talk] + '\t' + Poster_Present[talk] + '\t' + Genders[talk] + '\t' + Status[talk] + '\n')
     file_meta.write(line)
 
 
