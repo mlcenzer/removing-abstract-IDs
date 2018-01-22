@@ -83,7 +83,7 @@ for old_line in file_dirty:
             title=1 #title line always follows willing to record line
             #UNLESS they prefer a poster
         else:
-            giveaways=re.findall(r'\(\d,?\d?\)', line) #identifying name and institution lines. These lines always contain an institution identifier in parentheses.
+            giveaways=re.findall(r'\(\d[,\d]*\)', line) #identifying name and institution lines. These lines always contain an institution identifier in parentheses.
             if giveaways:
                 line.strip()
                 if line[-2:-1]=='.': #sometimes people use numbers in parentheses in their abstracts. Abstracts end with punctuation. Haven't seen any ! or ?.
@@ -98,6 +98,10 @@ file_meta=open('meta_data.tex', "w") #makes metadata file
 
 total_talks=len(References)
 
+#print(len(References))
+#print(len(Poster_Present))
+#print(len(Genders))
+#print(len(Status))
 
 for talk in range(0,total_talks): #make tab-delimited file of metadata
     line=str(References[talk] + '\t' + Preference[talk] + '\t' + Poster_Present[talk] + '\t' + Genders[talk] + '\t' + Status[talk] + '\n')
