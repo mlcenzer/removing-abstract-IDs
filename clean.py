@@ -65,7 +65,7 @@ for old_line in file_dirty:
             pref_line=str('\\textbf{Preferred format: }'+pref + '\n')
             file_clean.write(pref_line)
             if re.findall(r"Poster", pref):
-                Poster_Present.append("Yes")
+                Poster_Present.append("Yes") #presenter's who prefer posters were not asked this question
         elif line.startswith('- If you'):
             poster=line[113:]
             Poster_Present.append(poster[:-1])
