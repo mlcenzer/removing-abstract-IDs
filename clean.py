@@ -29,6 +29,7 @@ file_clean.write('\\begin{document}\n')
 
 #unless it's the title line
 title=0
+posttitle=0
 
 for old_line in file_dirty:
     
@@ -45,7 +46,8 @@ for old_line in file_dirty:
             file_clean.write('\\vspace{12pt}\n')
             file_clean.write(title_line)
             file_clean.write('\n\\vspace{12pt}\n')
-            title=0
+            title=0 #reset
+            posttitle=0 #reset
     else:    
         if line.startswith('Author gender'):
             gender=line[15:] #presenter gender
@@ -53,6 +55,8 @@ for old_line in file_dirty:
         elif line.startswith('Author status'):
             status=line[15:]#presenter career stage
             Status.append(status[:-1])#add to metadata
+            if posttitle==1:
+                title=1 #for poster presentations, title line follows status line
         elif line.startswith('Reference'):
             ref=line[11:] #reference number
             References.append(ref[:-1]) #add to metadata
@@ -66,6 +70,7 @@ for old_line in file_dirty:
             file_clean.write(pref_line)
             if re.findall(r"Poster", pref):
                 Poster_Present.append("Yes") #presenter's who prefer posters were not asked this question
+                posttitle=1 #presenter's who prefer posters don't get the next two lines
         elif line.startswith('- If you'):
             poster=line[113:]
             Poster_Present.append(poster[:-1])
@@ -76,7 +81,7 @@ for old_line in file_dirty:
             rec_line=str('\\textbf{Willing to record: }'+record + '\n')
             file_clean.write(rec_line)
             title=1 #title line always follows willing to record line
-        
+            #UNLESS they prefer a poster
         else:
             giveaways=re.findall(r'\(\d,?\d?\)', line) #identifying name and institution lines. These lines always contain an institution identifier in parentheses.
             if giveaways:
