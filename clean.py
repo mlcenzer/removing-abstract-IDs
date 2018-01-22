@@ -94,13 +94,10 @@ for old_line in file_dirty:
                 file_clean.write('\n')
 
                 
-#print(Preference))
 file_meta=open('meta_data.tex', "w") #makes metadata file
 
 total_talks=len(References)
 
-print(len(Poster_Present))
-print(len(Preference))
 
 for talk in range(0,total_talks): #make tab-delimited file of metadata
     line=str(References[talk] + '\t' + Preference[talk] + '\t' + Poster_Present[talk] + '\t' + Genders[talk] + '\t' + Status[talk] + '\n')
