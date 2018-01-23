@@ -41,7 +41,7 @@ for line in file_dirty:
     joiner='\\&'
     line=joiner.join(forbidden)
     forbidden=line.split('~')
-    joiner='\\~'
+    joiner='$\sim$'
     line=joiner.join(forbidden)
     #Make title line bold
     if title==1:
