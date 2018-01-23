@@ -32,17 +32,16 @@ title=0
 posttitle=0
 
 for line in file_dirty:
-    #print(line)
     line=line.decode('latin1')
-    #print(line)
-    if line.startswith("Alternative reproductive tactics"):
-        print( line[-3:-1])
     #Deal with the use of characters that need to be escaped in latex
     forbidden=line.split('%')
     joiner='\\%'
     line=joiner.join(forbidden)
     forbidden=line.split('&')
     joiner='\\&'
+    line=joiner.join(forbidden)
+    forbidden=line.split('~')
+    joiner='\\~'
     line=joiner.join(forbidden)
     #Make title line bold
     if title==1:
