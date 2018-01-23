@@ -7,7 +7,7 @@ file_name_dirty=sys.argv[1]
 file_name_clean=sys.argv[2]
 
 #open files
-file_dirty=open(file_name_dirty, "r")
+file_dirty=open(file_name_dirty, "rb")
 file_clean=open(file_name_clean, "w")
 
 #Empty lists for storing meta-data. Currently does not add people or location data.  
@@ -31,13 +31,17 @@ file_clean.write('\\begin{document}\n')
 title=0
 posttitle=0
 
-for old_line in file_dirty:
-    
+for line in file_dirty:
+    #print(line)
+    line=line.decode('latin1')
+    #print(line)
+    if line.startswith("Alternative reproductive tactics"):
+        print( line[-3:-1])
     #Deal with the use of characters that need to be escaped in latex
-    forbidden=old_line.split('%')
+    forbidden=line.split('%')
     joiner='\\%'
-    new_line=joiner.join(forbidden)
-    forbidden=new_line.split('&')
+    line=joiner.join(forbidden)
+    forbidden=line.split('&')
     joiner='\\&'
     line=joiner.join(forbidden)
     #Make title line bold
@@ -57,13 +61,13 @@ for old_line in file_dirty:
             Status.append(status[:-1])#add to metadata
             if posttitle==1:
                 title=1 #for poster presentations, title line follows status line
-        elif line.startswith('Reference'):
+        elif re.findall('Reference:', line):
             ref=line[11:] #reference number
             References.append(ref[:-1]) #add to metadata
             ref_line=str('\\textbf{Reference: }'+ref + '\n') #prettify
             file_clean.write('\\clearpage') #new page for a new abstract
             file_clean.write(ref_line) #write reference number into file
-        elif line.startswith('Preferred'):
+        elif line.startswith('Preferred type'):
             pref=line[32:] #and so on
             Preference.append(pref[:-1])
             pref_line=str('\\textbf{Preferred format: }'+pref + '\n')
@@ -71,12 +75,12 @@ for old_line in file_dirty:
             if re.findall(r"Poster", pref):
                 Poster_Present.append("Yes") #presenter's who prefer posters were not asked this question
                 posttitle=1 #presenter's who prefer posters don't get the next two lines
-        elif line.startswith('- If you'):
+        elif line.startswith('- If you wish'):
             poster=line[113:]
             Poster_Present.append(poster[:-1])
             post_line=str('\\textbf{Would accept a poster: }'+poster + '\n')
             file_clean.write(post_line)
-        elif line.startswith('- We plan'):
+        elif line.startswith('- We plan to have'):
             record=line[211:]
             rec_line=str('\\textbf{Willing to record: }'+record + '\n')
             file_clean.write(rec_line)
@@ -86,8 +90,8 @@ for old_line in file_dirty:
             giveaways=re.findall(r'\(\d[,\d]*\)', line) #identifying name and institution lines. These lines always contain an institution identifier in parentheses.
             if giveaways:
                 line.strip()
-                if line[-2:-1]=='.': #sometimes people use numbers in parentheses in their abstracts. Abstracts end with punctuation. Haven't seen any ! or ?.
-                    file_clean.write(new_line)
+                if line[-2:-1]=="." or line[-3:-2]==".": #sometimes people use numbers in parentheses in their abstracts. Abstracts end with punctuation. Haven't seen any ! or ?.
+                    file_clean.write(line)
                     file_clean.write('\n')
             else:
                 file_clean.write(line) #writes abstracts
