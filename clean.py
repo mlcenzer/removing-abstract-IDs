@@ -37,6 +37,12 @@ for line in file_dirty:
     forbidden=line.split('%')
     joiner='\\%'
     line=joiner.join(forbidden)
+    forbidden=line.split('<')
+    joiner='\\textless'
+    line=joiner.join(forbidden)
+    forbidden=line.split('>')
+    joiner='\\textgreater'
+    line=joiner.join(forbidden)
     forbidden=line.split('&')
     joiner='\\&'
     line=joiner.join(forbidden)
